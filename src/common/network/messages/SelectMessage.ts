@@ -21,18 +21,28 @@ export class SelectMessage extends Networker.MessageType<
     return NetworkSide.PLUGIN;
   }
 
+  private boundingBox(w: number, h: number, degrees: number) {
+    const rads = (degrees * Math.PI) / 180;
+    const width = Math.abs(w * Math.cos(rads)) + Math.abs(h * Math.sin(rads));
+    const height = Math.abs(w * Math.sin(rads)) + Math.abs(h * Math.cos(rads));
+
+    return { width, height };
+  }
+
   private centerChild(frame: SceneNode) {
     if (frame && frame.type === "FRAME" && frame.children.length === 1) {
-      const child = frame.children[0];
+      const child = frame.children[0] as FrameNode | GroupNode;
 
-      const centerX = frame.width / 2;
-      const centerY = frame.height / 2;
+      const childWidth = child.width * child.relativeTransform[0][0];
+      const childHeight = child.height * child.relativeTransform[1][1];
 
-      const newX = centerX - child.width / 2;
-      const newY = centerY - child.height / 2;
+      const offsetX = (frame.width - childWidth) / 2;
+      const offsetY = (frame.height - childHeight) / 2;
 
-      child.x = newX;
-      child.y = newY;
+      child.relativeTransform = [
+        [child.relativeTransform[0][0], child.relativeTransform[0][1], offsetX],
+        [child.relativeTransform[1][0], child.relativeTransform[1][1], offsetY],
+      ];
     }
   }
 
