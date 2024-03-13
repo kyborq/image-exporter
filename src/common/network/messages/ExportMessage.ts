@@ -19,6 +19,7 @@ type Payload = Label[];
 
 type Exported = {
   bytes: Uint8Array;
+  fileName: string;
   folderName: string;
 };
 
@@ -48,17 +49,19 @@ export class ExportMessage extends Networker.MessageType<
 
       return {
         folderName: label.name,
+        fileName: element.name,
         bytes,
       };
     });
 
     const results = await Promise.all(exportTasks);
+
     return results;
   }
 
   async handle(payload: Payload, from: Networker.Side) {
-    const exportLabelsTasks = payload.map((label) =>
-      this.exportElements(label)
+    const exportLabelsTasks = payload.map(
+      async (label) => await this.exportElements(label)
     );
 
     const exportedArrays = await Promise.all(exportLabelsTasks);

@@ -1,3 +1,8 @@
+import { format } from "date-fns";
+import { saveAs } from "file-saver";
+import JSZip from "jszip";
+import { useState } from "react";
+
 import { NetworkMessages } from "@common/network/messages";
 
 import PlusIcon from "./assets/plus.svg?component";
@@ -6,16 +11,50 @@ import { Card } from "./components/Card";
 import { Empty } from "./components/Empty";
 import { Input } from "./components/Input";
 import { useLabels } from "./hooks/useLabels";
+import { Exported } from "./models/exported.model";
+import { uuid } from "./utils/uuid.util";
 
 function App() {
   const { label, labels, setLabel, addLabel, removeLabel, renameLabel } =
     useLabels();
+
+  const [progress, setProgress] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const toPreview = (bytes: Uint8Array) => {
     const url = URL.createObjectURL(
       new Blob([bytes.buffer], { type: "image/png" })
     );
     return url;
+  };
+
+  const addToZip = async (name: string, exported: Exported[]) => {
+    const zip = new JSZip();
+
+    const zipOptions: JSZip.JSZipGeneratorOptions = {
+      type: "blob",
+      compression: "DEFLATE",
+      compressionOptions: {
+        level: 6,
+      },
+    };
+
+    exported.forEach((frame, index) => {
+      zip.file(
+        `${frame.folderName}/${index}_${frame.fileName}_${uuid()}.png`,
+        frame.bytes
+      );
+    });
+
+    const content = await zip.generateAsync(zipOptions, (metadata) => {
+      setProgress(metadata.percent);
+
+      if (metadata.percent === 100) {
+        setIsLoading(false);
+      }
+    });
+
+    saveAs(content as any, name);
   };
 
   const handleCreateLabel = async () => {
@@ -30,9 +69,17 @@ function App() {
   };
 
   const handleExport = async () => {
-    const res = await NetworkMessages.EXPORT.request(labels);
-    console.log(res);
+    setIsLoading(true);
+
+    const res: Exported[] = await NetworkMessages.EXPORT.request(labels);
+
+    const date = new Date();
+    const today = format(date, "HH:mm:ss");
+
+    addToZip(`Exported_${today}`, res);
   };
+
+  const progressText = `${progress.toFixed(0)}%`;
 
   return (
     <>
@@ -59,7 +106,11 @@ function App() {
             />
           ))}
       </div>
-      <Button label="Экспортировать" onClick={handleExport} primary />
+      <Button
+        label={isLoading ? progressText : "Экспортировать"}
+        onClick={handleExport}
+        primary={!isLoading}
+      />
     </>
   );
 }
