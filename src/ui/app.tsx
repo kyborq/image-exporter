@@ -29,6 +29,10 @@ function App() {
     addLabel(label, resultWithPreview);
   };
 
+  const handleExport = async () => {
+    await NetworkMessages.EXPORT.request(labels);
+  };
+
   return (
     <>
       <div className="header">
@@ -53,34 +57,8 @@ function App() {
               onRename={renameLabel}
             />
           ))}
-        {/* {!!labels.length &&
-          labels.map((label) => {
-            return (
-              <div key={label.id} className="card">
-                <div className="label">
-                  <Input
-                    value={label.name}
-                    placeholder={label.name}
-                    onBlur={(value) => {
-                      renameLabel(label.id, value || label.name);
-                    }}
-                    transparent
-                  />
-                  <Button
-                    icon={<CrossIcon />}
-                    onClick={() => removeLabel(label.id)}
-                  />
-                </div>
-                <div className="previews">
-                  {label.elements.map(({ id, image }) => (
-                    <img key={id} src={image} className="previews__image" />
-                  ))}
-                </div>
-              </div>
-            );
-          })} */}
       </div>
-      <Button label="Экспортировать" primary />
+      <Button label="Экспортировать" onClick={handleExport} primary />
     </>
   );
 }

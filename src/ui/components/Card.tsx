@@ -51,7 +51,7 @@ export const Card = ({ label, onRename, onRemove }: Props) => {
           {elements.map((element) => (
             <img className="previews__image" src={element.image} />
           ))}
-          {!expanded && (
+          {!expanded && label.elements.length > 4 && (
             <div className="previews__placeholder">
               {`+${label.elements.length - visibleElements.length}`}
             </div>

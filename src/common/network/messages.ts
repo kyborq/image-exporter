@@ -5,14 +5,17 @@ import { HelloMessage } from "@common/network/messages/HelloMessage";
 import { PingMessage } from "@common/network/messages/PingMessage";
 import { NetworkSide } from "@common/network/sides";
 
-import { SelectElementMessage } from "./messages/SelectElementMessage";
+import { ExportMessage } from "./messages/ExportMessage";
+import { SelectMessage } from "./messages/SelectMessage";
 
 export namespace NetworkMessages {
   export const registry = new Networker.MessageTypeRegistry();
 
   export const PING = registry.register(new PingMessage("ping"));
 
-  export const SELECT = registry.register(new SelectElementMessage("select"));
+  export const SELECT = registry.register(new SelectMessage("select"));
+
+  export const EXPORT = registry.register(new ExportMessage("export"));
 
   export const HELLO_PLUGIN = registry.register(
     new HelloMessage(NetworkSide.PLUGIN)

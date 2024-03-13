@@ -41,9 +41,9 @@ input {
   flex: 1;
   flex-direction: column;
   gap: 4px;
-  overflow: auto;
+  overflow-y: scroll;
   margin-right: -8px;
-  padding-right: 8px;
+  padding-right: 4px;
 }
 
 .header {

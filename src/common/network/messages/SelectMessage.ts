@@ -13,7 +13,7 @@ interface Payload {}
 
 type Response = Selected[];
 
-export class SelectElementMessage extends Networker.MessageType<
+export class SelectMessage extends Networker.MessageType<
   Payload,
   Promise<Response>
 > {
@@ -47,6 +47,7 @@ export class SelectElementMessage extends Networker.MessageType<
       })
     );
 
+    figma.currentPage.selection = [];
     return framesData;
   }
 }
