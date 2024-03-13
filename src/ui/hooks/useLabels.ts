@@ -8,18 +8,26 @@ export const useLabels = () => {
   const [label, setLabel] = useState("");
   const [labels, setLabels] = useState<Label[]>([]);
 
+  const getExisted = (name: string) =>
+    labels.find((label) => label.name === name);
+
   const addLabel = (name: string, elements: Element[]) => {
     if (!label) return;
 
-    const newLabel: Label = {
-      id: uuid(),
-      name,
-      elements,
-    };
+    const existed = getExisted(name);
 
-    const newLabels: Label[] = [...labels, newLabel];
+    if (existed) {
+      addToLabel(existed.id, elements);
+    } else {
+      const newLabel: Label = {
+        id: uuid(),
+        name,
+        elements,
+      };
+      const newLabels: Label[] = [...labels, newLabel];
+      setLabels(newLabels);
+    }
 
-    setLabels(newLabels);
     setLabel("");
   };
 
@@ -28,10 +36,17 @@ export const useLabels = () => {
     setLabels(updatedLabels);
   };
 
-  const isExist = (name: string) => labels.find((label) => label.name === name);
+  const addToLabel = (id: string, elements: Element[]) => {
+    const updatedLabels = labels.map((label) =>
+      label.id === id
+        ? { ...label, elements: [...label.elements, ...elements] }
+        : label
+    );
+    setLabels(updatedLabels);
+  };
 
   const renameLabel = (id: string, name: string) => {
-    const label = isExist(name);
+    const label = getExisted(name);
 
     if (label) return;
 
