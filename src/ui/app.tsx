@@ -107,7 +107,7 @@ function App() {
           ))}
       </div>
       <Button
-        label={isLoading ? progressText : "Экспортировать"}
+        label={isLoading ? progressText : "Экспортировать в ZIP"}
         onClick={handleExport}
         primary={!isLoading}
       />
