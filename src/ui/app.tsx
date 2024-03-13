@@ -1,12 +1,11 @@
 import { NetworkMessages } from "@common/network/messages";
 
-import CrossIcon from "./assets/cross.svg?component";
 import PlusIcon from "./assets/plus.svg?component";
 import { Button } from "./components/Button";
+import { Card } from "./components/Card";
 import { Empty } from "./components/Empty";
 import { Input } from "./components/Input";
 import { useLabels } from "./hooks/useLabels";
-import { uuid } from "./utils/uuid.util";
 
 function App() {
   const { label, labels, setLabel, addLabel, removeLabel, renameLabel } =
@@ -46,6 +45,15 @@ function App() {
           <Empty text="Выделите элементы и придумайте ей метку" />
         )}
         {!!labels.length &&
+          labels.map((label) => (
+            <Card
+              key={label.id}
+              label={label}
+              onRemove={removeLabel}
+              onRename={renameLabel}
+            />
+          ))}
+        {/* {!!labels.length &&
           labels.map((label) => {
             return (
               <div key={label.id} className="card">
@@ -70,7 +78,7 @@ function App() {
                 </div>
               </div>
             );
-          })}
+          })} */}
       </div>
       <Button label="Экспортировать" primary />
     </>

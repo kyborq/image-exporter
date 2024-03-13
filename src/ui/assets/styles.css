@@ -50,26 +50,3 @@ input {
   display: flex;
   gap: 8px;
 }
-
-.label {
-  font-size: 11px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 4px;
-}
-
-.card {
-  padding: 4px;
-  background-color: #f2f2f2;
-  border-radius: 3px;
-}
-
-.previews {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.previews__image {
-  width: 20%;
-}

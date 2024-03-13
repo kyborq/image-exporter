@@ -1,0 +1,32 @@
+.card {
+  padding: 4px;
+  background-color: #f2f2f2;
+  border-radius: 3px;
+}
+
+.label {
+  font-size: 11px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+}
+
+.previews {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.previews__image {
+  width: 20%;
+}
+
+.previews__placeholder {
+  width: 52px;
+  height: 52px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
