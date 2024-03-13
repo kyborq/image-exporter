@@ -18,7 +18,10 @@ jobs:
 
         - name: Install Dependencies
           run: npm install
-          
+
+        - name: Build Project
+          run: npm run build
+        
         - name: Archive Production Artifacts
           run: zip -r release.zip dist/*
 
