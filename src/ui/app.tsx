@@ -30,7 +30,8 @@ function App() {
   };
 
   const handleExport = async () => {
-    await NetworkMessages.EXPORT.request(labels);
+    const res = await NetworkMessages.EXPORT.request(labels);
+    console.log(res);
   };
 
   return (

@@ -21,6 +21,21 @@ export class SelectMessage extends Networker.MessageType<
     return NetworkSide.PLUGIN;
   }
 
+  private centerChild(frame: SceneNode) {
+    if (frame && frame.type === "FRAME" && frame.children.length === 1) {
+      const child = frame.children[0];
+
+      const centerX = frame.width / 2;
+      const centerY = frame.height / 2;
+
+      const newX = centerX - child.width / 2;
+      const newY = centerY - child.height / 2;
+
+      child.x = newX;
+      child.y = newY;
+    }
+  }
+
   async getPreview(frame: SceneNode) {
     const bytes = await frame.exportAsync({
       format: "PNG",
@@ -37,6 +52,8 @@ export class SelectMessage extends Networker.MessageType<
 
     const framesData = await Promise.all(
       selectedFrames.map(async (frame) => {
+        this.centerChild(frame);
+
         const image = await this.getPreview(frame);
 
         return {
