@@ -24,8 +24,11 @@ jobs:
 
       - name: Archive Production Artifacts
         run: |
+          ZIP_NAME=ImageExporter_${GITHUB_REF#refs/tags/}.zip
+          echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
           cd dist
-          zip -r ../ImageExporter_${GITHUB_REF#refs/tags/}.zip .
+          zip -r ../$ZIP_NAME .
+          cd ..
 
       - name: Create Release
         id: create_release
@@ -46,6 +49,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./ImageExporter_${GITHUB_REF#refs/tags/}.zip
-          asset_name: ImageExporter_${GITHUB_REF#refs/tags/}.zip
+          asset_path: ./${{ env.ZIP_NAME }}
+          asset_name: ${{ env.ZIP_NAME }}
           asset_content_type: application/zip
