@@ -1,0 +1,15 @@
+.empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #e2e2e2;
+  border-radius: 3px;
+  flex: 1;
+}
+
+.empty__text {
+  font-size: 11px;
+  color: #c7c7c7;
+  max-width: 70%;
+  text-align: center;
+}
