@@ -14,6 +14,6 @@ export class HelloMessage extends Networker.MessageType<Payload> {
   }
 
   handle(payload: Payload, from: Networker.Side) {
-    console.log(`${from.getName()} said "${payload.text}"`);
+    // console.log(`${from.getName()} said "${payload.text}"`);
   }
 }

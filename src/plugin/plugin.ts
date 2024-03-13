@@ -1,5 +1,3 @@
-import * as Networker from "monorepo-networker";
-
 import { initializeNetwork } from "@common/network/init";
 import { NetworkMessages } from "@common/network/messages";
 import { NetworkSide } from "@common/network/sides";
@@ -15,7 +13,7 @@ async function bootstrap() {
     });
   }
 
-  console.log("Bootstrapped @", Networker.Side.current.getName());
+  // console.log("Bootstrapped @", Networker.Side.current.getName());
 
   NetworkMessages.HELLO_UI.send({ text: "Hey there, UI!" });
 }

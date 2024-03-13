@@ -1,16 +1,33 @@
+import { NetworkMessages } from "@common/network/messages";
+
 import CrossIcon from "./assets/cross.svg?component";
 import PlusIcon from "./assets/plus.svg?component";
 import { Button } from "./components/Button";
 import { Empty } from "./components/Empty";
 import { Input } from "./components/Input";
 import { useLabels } from "./hooks/useLabels";
+import { uuid } from "./utils/uuid.util";
 
 function App() {
   const { label, labels, setLabel, addLabel, removeLabel, renameLabel } =
     useLabels();
 
-  const handleCreateLabel = () => {
-    addLabel(label, []);
+  const toPreview = (bytes: Uint8Array) => {
+    const url = URL.createObjectURL(
+      new Blob([bytes.buffer], { type: "image/png" })
+    );
+    return url;
+  };
+
+  const handleCreateLabel = async () => {
+    const result = await NetworkMessages.SELECT.request({});
+
+    const resultWithPreview = result.map((item) => ({
+      ...item,
+      image: toPreview(item.bytes),
+    }));
+
+    addLabel(label, resultWithPreview);
   };
 
   return (
@@ -31,19 +48,26 @@ function App() {
         {!!labels.length &&
           labels.map((label) => {
             return (
-              <div className="label">
-                <Input
-                  value={label.name}
-                  placeholder={label.name}
-                  onBlur={(value) => {
-                    renameLabel(label.id, value || label.name);
-                  }}
-                  transparent
-                />
-                <Button
-                  icon={<CrossIcon />}
-                  onClick={() => removeLabel(label.id)}
-                />
+              <div key={label.id} className="card">
+                <div className="label">
+                  <Input
+                    value={label.name}
+                    placeholder={label.name}
+                    onBlur={(value) => {
+                      renameLabel(label.id, value || label.name);
+                    }}
+                    transparent
+                  />
+                  <Button
+                    icon={<CrossIcon />}
+                    onClick={() => removeLabel(label.id)}
+                  />
+                </div>
+                <div className="previews">
+                  {label.elements.map(({ id, image }) => (
+                    <img key={id} src={image} className="previews__image" />
+                  ))}
+                </div>
               </div>
             );
           })}
