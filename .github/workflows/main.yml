@@ -21,9 +21,17 @@ jobs:
 
         - name: Build Project
           run: npm run build
-        
+
+        - name: Set Artifact Name
+          run: echo "ImageExporter-${{ github.ref }}" > artifact_name.txt
+
         - name: Archive Production Artifacts
-          run: zip -r release.zip dist/*
+          run: |
+            cd dist
+            zip -r ../release.zip 
+
+        - name: Set Artifact Name
+          run: echo "ImageExporter-${{ github.ref }}" > artifact_name.txt
 
         - name: Create Release
           id: create_release
