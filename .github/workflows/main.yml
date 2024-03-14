@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
@@ -30,6 +32,16 @@ jobs:
           zip -r ../$ZIP_NAME .
           cd ..
 
+      - name: Get commits
+        id: get_commits
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 HEAD^)
+          COMMITS=$(git log $LAST_TAG..HEAD --pretty=format:"- %s")
+          COMMITS="${COMMITS//'%'/'%25'}"
+          COMMITS="${COMMITS//$'\n'/'%0A'}"
+          COMMITS="${COMMITS//$'\r'/'%0D'}"
+          echo "::set-output name=commits::$COMMITS"
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -40,7 +52,7 @@ jobs:
           release_name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
-          body: "Новый релиз ${{ github.ref_name }}"
+          body: "Новый релиз ${{ github.ref_name }} с изменениями:%0A${{ steps.get_commits.outputs.commits }}"
           commitish: ${{ github.sha }}
 
       - name: Upload Release Asset
