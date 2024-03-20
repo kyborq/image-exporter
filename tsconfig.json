@@ -22,6 +22,7 @@
   "include": [
     "src/**/*.d.ts",
     "src/**/*.ts",
-    "src/**/*.tsx"
+    "src/**/*.tsx",
+    "src/ui/hooks/useCollections.ts"
   ]
 }

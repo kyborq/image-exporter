@@ -1,15 +1,14 @@
-import CloseIcon from "../../assets/close.svg?component";
 import styles from "./Preview.module.css";
 
 type Props = {
   image?: string;
+  onClick?: () => void;
 };
 
-export const Preview = ({ image }: Props) => {
+export const Preview = ({ image, onClick }: Props) => {
   return (
-    <div className={styles.Preview}>
+    <div className={styles.Preview} onClick={onClick}>
       {!!image && <img className={styles.Image} src={image} />}
-      <CloseIcon className={styles.Icon} stroke="red" />
     </div>
   );
 };

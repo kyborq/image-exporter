@@ -14,9 +14,15 @@ type Props = {
   collection: TCollection;
   onRename?: (id: string, newName: string) => void;
   onRemove?: (id: string) => void;
+  onRemoveItem?: (collection: string, id: string) => void;
 };
 
-export const Collection = ({ collection, onRename, onRemove }: Props) => {
+export const Collection = ({
+  collection,
+  onRename,
+  onRemove,
+  onRemoveItem,
+}: Props) => {
   const [expanded, setExpanded] = useState(false);
 
   const { id, name, elements } = collection;
@@ -50,7 +56,13 @@ export const Collection = ({ collection, onRename, onRemove }: Props) => {
       {!!elements.length && (
         <div className={styles.Preview}>
           {totalElements.map((element) => (
-            <Preview image={element.image} />
+            <Preview
+              key={element.id}
+              image={element.image}
+              onClick={() =>
+                onRemoveItem && onRemoveItem(collection.id, element.id)
+              }
+            />
           ))}
           {!expanded && elements.length > 5 && (
             <div className={styles.Placeholder}>

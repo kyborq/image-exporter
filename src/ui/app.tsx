@@ -5,25 +5,33 @@ import { Collection } from "./components";
 import { Button } from "./components/Button/Button";
 import { Empty } from "./components/Empty/Empty";
 import { Input } from "./components/Input/Input";
-import { useLabels } from "./hooks/useLabels";
+import { useCollections } from "./hooks/useCollections";
+import { useField } from "./hooks/useField";
 import { exportCollections, getSelected } from "./services/collections.service";
 import { downloadCollections } from "./services/file.service";
 
 function App() {
-  const { label, labels, setLabel, addLabel, removeLabel, renameLabel } =
-    useLabels();
+  const { value, handleChange, clearValue } = useField();
+  const {
+    collections,
+    createCollection,
+    deleteCollection,
+    renameCollection,
+    deleteItem,
+  } = useCollections();
 
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCreateLabel = async () => {
     const selected = await getSelected();
-    addLabel(label, selected);
+    createCollection(value, selected);
+    clearValue();
   };
 
   const handleExport = async () => {
     setIsLoading(true);
 
-    const exported = await exportCollections(labels);
+    const exported = await exportCollections(collections);
     await downloadCollections(exported);
 
     setIsLoading(false);
@@ -34,23 +42,24 @@ function App() {
       <div className="header">
         <Input
           placeholder="Название метки"
-          value={label}
-          onChange={setLabel}
+          value={value}
+          onChange={handleChange}
           onEnter={handleCreateLabel}
         />
         <Button icon={<PlusIcon />} onClick={handleCreateLabel} />
       </div>
       <div className="content">
-        {!labels.length && (
+        {!collections.length && (
           <Empty text="Выделите элементы и придумайте ей метку" />
         )}
-        {!!labels.length &&
-          labels.map((label) => (
+        {!!collections.length &&
+          collections.map((collection) => (
             <Collection
-              key={label.id}
-              collection={label}
-              onRemove={removeLabel}
-              onRename={renameLabel}
+              key={collection.id}
+              collection={collection}
+              onRemove={deleteCollection}
+              onRename={renameCollection}
+              onRemoveItem={deleteItem}
             />
           ))}
       </div>

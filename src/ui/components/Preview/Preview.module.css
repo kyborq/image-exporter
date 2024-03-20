@@ -18,17 +18,3 @@
   width: 100%;
   transition: 150ms;
 }
-
-.Preview:hover .Image {
-  opacity: 0.25;
-  transition: 150ms;
-}
-
-.Icon {
-  position: absolute;
-  display: none;
-}
-
-.Preview:hover .Icon {
-  display: block;
-}
