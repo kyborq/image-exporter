@@ -1,17 +1,16 @@
 import { useState } from "react";
 
-import { Label } from "@ui/models/label.model";
+import { Collection } from "@ui/models/label.model";
 
-import ChevronDownIcon from "../assets/chevron-down.svg?component";
-import ChevronRightIcon from "../assets/chevron-right.svg?component";
-import CrossIcon from "../assets/cross.svg?component";
-import { Button } from "./Button";
-import { Input } from "./Input";
-
-import "./Card.css";
+import ChevronDownIcon from "../../assets/chevron-down.svg?component";
+import ChevronRightIcon from "../../assets/chevron-right.svg?component";
+import CrossIcon from "../../assets/cross.svg?component";
+import { Button } from "../Button/Button";
+import { Input } from "../Input/Input";
+import styles from "./Card.module.css";
 
 type Props = {
-  label: Label;
+  label: Collection;
   onRename?: (id: string, newName: string) => void;
   onRemove?: (id: string) => void;
 };
@@ -32,8 +31,8 @@ export const Card = ({ label, onRename, onRemove }: Props) => {
   };
 
   return (
-    <div className="card">
-      <div className="label">
+    <div className={styles.Card}>
+      <div className={styles.Label}>
         <Button
           icon={expanded ? <ChevronDownIcon /> : <ChevronRightIcon />}
           onClick={() => setExpanded((e) => !e)}
@@ -47,12 +46,12 @@ export const Card = ({ label, onRename, onRemove }: Props) => {
         <Button icon={<CrossIcon />} onClick={handleRemove} />
       </div>
       {!!label.elements.length && (
-        <div className="previews">
+        <div className={styles.Preview}>
           {elements.map((element) => (
-            <img className="previews__image" src={element.image} />
+            <img className={styles.Image} src={element.image} />
           ))}
           {!expanded && label.elements.length > 4 && (
-            <div className="previews__placeholder">
+            <div className={styles.Preview}>
               {`+${label.elements.length - visibleElements.length}`}
             </div>
           )}

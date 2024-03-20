@@ -1,6 +1,6 @@
 import { classes } from "@ui/utils/classes.util";
 
-import "./Button.css";
+import styles from "./Button.module.css";
 
 type Props = {
   icon?: React.ReactNode;
@@ -13,7 +13,7 @@ type Props = {
 export const Button = ({ label, icon, primary, disabled, onClick }: Props) => {
   return (
     <button
-      className={classes("button", primary && "primary")}
+      className={classes(styles.Button, primary && styles.Primary)}
       disabled={disabled}
       onClick={onClick}
     >

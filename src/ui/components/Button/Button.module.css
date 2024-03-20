@@ -1,4 +1,4 @@
-.button {
+.Button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,22 +13,22 @@
   transition: 150ms;
 }
 
-.button:hover {
+.Button:hover {
   background-color: #e2e2e2;
   transition: 150ms;
 }
 
-.button.primary {
+.Button.Primary {
   background-color: #18a0fb;
   color: #ffffff;
 }
 
-.button.primary:hover {
+.Button.Primary:hover {
   background-color: #1998ec;
   transition: 150ms;
 }
 
-.button:active {
+.Button:active {
   opacity: 0.8;
   transition: 150ms;
 }

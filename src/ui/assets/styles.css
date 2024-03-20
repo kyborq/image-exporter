@@ -50,3 +50,12 @@ input {
   display: flex;
   gap: 8px;
 }
+
+.footer {
+  display: flex;
+  gap: 8px;
+}
+
+.footer .button {
+  flex: 1;
+}

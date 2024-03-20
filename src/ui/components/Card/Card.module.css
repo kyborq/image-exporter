@@ -1,10 +1,10 @@
-.card {
+.Card {
   padding: 4px;
   background-color: #f2f2f2;
   border-radius: 3px;
 }
 
-.label {
+.Label {
   font-size: 11px;
   display: flex;
   justify-content: space-between;
@@ -12,16 +12,16 @@
   gap: 4px;
 }
 
-.previews {
+.Preview {
   display: flex;
   flex-wrap: wrap;
 }
 
-.previews__image {
+.Image {
   width: 20%;
 }
 
-.previews__placeholder {
+.Placeholder {
   width: 52px;
   height: 52px;
   border-radius: 3px;

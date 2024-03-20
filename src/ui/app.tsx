@@ -1,85 +1,33 @@
-import { format } from "date-fns";
-import { saveAs } from "file-saver";
-import JSZip from "jszip";
 import { useState } from "react";
 
-import { NetworkMessages } from "@common/network/messages";
-
 import PlusIcon from "./assets/plus.svg?component";
-import { Button } from "./components/Button";
-import { Card } from "./components/Card";
-import { Empty } from "./components/Empty";
-import { Input } from "./components/Input";
+import { Button } from "./components/Button/Button";
+import { Card } from "./components/Card/Card";
+import { Empty } from "./components/Empty/Empty";
+import { Input } from "./components/Input/Input";
 import { useLabels } from "./hooks/useLabels";
-import { Exported } from "./models/exported.model";
-import { uuid } from "./utils/uuid.util";
+import { exportCollections, getSelected } from "./services/collections.service";
+import { downloadCollections } from "./services/file.service";
 
 function App() {
   const { label, labels, setLabel, addLabel, removeLabel, renameLabel } =
     useLabels();
 
-  const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  const toPreview = (bytes: Uint8Array) => {
-    const url = URL.createObjectURL(
-      new Blob([bytes.buffer], { type: "image/png" })
-    );
-    return url;
-  };
-
-  const addToZip = async (name: string, exported: Exported[]) => {
-    const zip = new JSZip();
-
-    const zipOptions: JSZip.JSZipGeneratorOptions = {
-      type: "blob",
-      compression: "DEFLATE",
-      compressionOptions: {
-        level: 6,
-      },
-    };
-
-    exported.forEach((frame, index) => {
-      zip.file(
-        `${frame.folderName}/${index}_${frame.fileName}_${uuid()}.png`,
-        frame.bytes
-      );
-    });
-
-    const content = await zip.generateAsync(zipOptions, (metadata) => {
-      setProgress(metadata.percent);
-
-      if (metadata.percent === 100) {
-        setIsLoading(false);
-      }
-    });
-
-    saveAs(content as any, name);
-  };
-
   const handleCreateLabel = async () => {
-    const result = await NetworkMessages.SELECT.request({});
-
-    const resultWithPreview = result.map((item) => ({
-      ...item,
-      image: toPreview(item.bytes),
-    }));
-
-    addLabel(label, resultWithPreview);
+    const selected = await getSelected();
+    addLabel(label, selected);
   };
 
   const handleExport = async () => {
     setIsLoading(true);
 
-    const res: Exported[] = await NetworkMessages.EXPORT.request(labels);
+    const exported = await exportCollections(labels);
+    await downloadCollections(exported);
 
-    const date = new Date();
-    const today = format(date, "HH:mm:ss");
-
-    addToZip(`Exported_${today}`, res);
+    setIsLoading(false);
   };
-
-  const progressText = `${progress.toFixed(0)}%`;
 
   return (
     <>
@@ -107,7 +55,7 @@ function App() {
           ))}
       </div>
       <Button
-        label={isLoading ? progressText : "Экспортировать в ZIP"}
+        label={isLoading ? "Экспортирую..." : "Экспортировать в ZIP"}
         onClick={handleExport}
         primary={!isLoading}
       />

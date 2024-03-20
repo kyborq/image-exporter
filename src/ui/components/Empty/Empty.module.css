@@ -1,4 +1,4 @@
-.empty {
+.Empty {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -7,7 +7,7 @@
   flex: 1;
 }
 
-.empty__text {
+.Text {
   font-size: 11px;
   color: #c7c7c7;
   max-width: 70%;

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { classes } from "@ui/utils/classes.util";
 
-import "./Input.css";
+import styles from "./Input.module.css";
 
 type Props = {
   value: string;
@@ -11,14 +11,12 @@ type Props = {
   onEnter?: () => void;
   onBlur?: (value: string) => void;
   transparent?: boolean;
-  keep?: boolean;
 };
 
 export const Input = ({
   value,
   placeholder,
   transparent,
-  keep,
   onChange,
   onEnter,
   onBlur,
@@ -35,9 +33,9 @@ export const Input = ({
 
   return (
     <input
-      className={classes("input", transparent && "transparent")}
-      placeholder={placeholder}
       value={currentValue}
+      placeholder={placeholder}
+      className={classes(styles.Input, transparent && styles.Transparent)}
       onKeyDown={(e) => e.key === "Enter" && onEnter && onEnter()}
       onChange={(e) => setCurrentValue(e.target.value)}
       onBlur={() => onBlur && onBlur(currentValue)}

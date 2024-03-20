@@ -1,4 +1,4 @@
-.input {
+.Input {
   padding: 8px;
   font-size: 11px;
   flex: 1;
@@ -8,12 +8,12 @@
   transition: 150ms;
 }
 
-.input:focus {
+.Input:focus {
   border: 1px solid #18a0fb;
   transition: 150ms;
 }
 
-.input.transparent {
+.Input.Transparent {
   background-color: transparent;
   border: none;
 }

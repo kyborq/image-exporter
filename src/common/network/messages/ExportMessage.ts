@@ -9,21 +9,26 @@ type Element = {
   image?: string;
 };
 
-export type Label = {
+export type Collection = {
   id: string;
   name: string;
   elements: Element[];
 };
 
-type Payload = Label[];
+type Payload = Collection[];
 
 type Exported = {
+  name: string;
+  elements: ExportedElement[];
+};
+
+type ExportedElement = {
   bytes: Uint8Array;
   fileName: string;
   folderName: string;
 };
 
-type Response = Exported[];
+type Response = Exported;
 
 export class ExportMessage extends Networker.MessageType<
   Payload,
@@ -43,12 +48,12 @@ export class ExportMessage extends Networker.MessageType<
     return bytes;
   }
 
-  async exportElements(label: Label): Promise<Exported[]> {
-    const exportTasks = label.elements.map(async (element) => {
+  async exportElements(collection: Collection): Promise<ExportedElement[]> {
+    const exportTasks = collection.elements.map(async (element) => {
       const bytes = await this.exportFrame(element.id);
 
       return {
-        folderName: label.name,
+        folderName: collection.name,
         fileName: element.name,
         bytes,
       };
@@ -60,13 +65,12 @@ export class ExportMessage extends Networker.MessageType<
   }
 
   async handle(payload: Payload, from: Networker.Side) {
-    const exportLabelsTasks = payload.map(
-      async (label) => await this.exportElements(label)
+    const elements = payload.map(
+      async (collection) => await this.exportElements(collection)
     );
 
-    const exportedArrays = await Promise.all(exportLabelsTasks);
-    const exported = exportedArrays.flat();
+    const exported = await Promise.all(elements);
 
-    return exported;
+    return { name: figma.root.name, elements: exported.flat() };
   }
 }
