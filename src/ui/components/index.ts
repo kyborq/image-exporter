@@ -1,4 +1,5 @@
 export * from "./Button";
-export * from "./Card";
+export * from "./Collection";
 export * from "./Empty";
 export * from "./Input";
+export * from "./Preview";

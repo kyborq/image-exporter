@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 import PlusIcon from "./assets/plus.svg?component";
+import { Collection } from "./components";
 import { Button } from "./components/Button/Button";
-import { Card } from "./components/Card/Card";
 import { Empty } from "./components/Empty/Empty";
 import { Input } from "./components/Input/Input";
 import { useLabels } from "./hooks/useLabels";
@@ -46,9 +46,9 @@ function App() {
         )}
         {!!labels.length &&
           labels.map((label) => (
-            <Card
+            <Collection
               key={label.id}
-              label={label}
+              collection={label}
               onRemove={removeLabel}
               onRename={renameLabel}
             />

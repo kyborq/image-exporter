@@ -1,33 +1,35 @@
 import { useState } from "react";
 
-import { Collection } from "@ui/models/label.model";
+import { TCollection } from "@ui/models/label.model";
 
 import ChevronDownIcon from "../../assets/chevron-down.svg?component";
 import ChevronRightIcon from "../../assets/chevron-right.svg?component";
 import CrossIcon from "../../assets/cross.svg?component";
 import { Button } from "../Button/Button";
 import { Input } from "../Input/Input";
-import styles from "./Card.module.css";
+import { Preview } from "../Preview";
+import styles from "./Collection.module.css";
 
 type Props = {
-  label: Collection;
+  collection: TCollection;
   onRename?: (id: string, newName: string) => void;
   onRemove?: (id: string) => void;
 };
 
-export const Card = ({ label, onRename, onRemove }: Props) => {
+export const Collection = ({ collection, onRename, onRemove }: Props) => {
   const [expanded, setExpanded] = useState(false);
 
-  const visibleElements = label.elements.slice(0, 4);
+  const { id, name, elements } = collection;
 
-  const elements = expanded ? label.elements : visibleElements;
+  const visibleElements = elements.slice(0, elements.length > 5 ? 4 : 5);
+  const totalElements = expanded ? elements : visibleElements;
 
   const handleRemove = () => {
-    onRemove && onRemove(label.id);
+    onRemove && onRemove(id);
   };
 
   const handleRename = (value: string) => {
-    onRename && onRename(label.id, value);
+    onRename && onRename(id, value);
   };
 
   return (
@@ -38,21 +40,21 @@ export const Card = ({ label, onRename, onRemove }: Props) => {
           onClick={() => setExpanded((e) => !e)}
         />
         <Input
-          value={label.name}
-          placeholder={label.name}
+          value={name}
+          placeholder={name}
           onBlur={handleRename}
           transparent
         />
         <Button icon={<CrossIcon />} onClick={handleRemove} />
       </div>
-      {!!label.elements.length && (
+      {!!elements.length && (
         <div className={styles.Preview}>
-          {elements.map((element) => (
-            <img className={styles.Image} src={element.image} />
+          {totalElements.map((element) => (
+            <Preview image={element.image} />
           ))}
-          {!expanded && label.elements.length > 4 && (
-            <div className={styles.Preview}>
-              {`+${label.elements.length - visibleElements.length}`}
+          {!expanded && elements.length > 5 && (
+            <div className={styles.Placeholder}>
+              {`+${elements.length - visibleElements.length}`}
             </div>
           )}
         </div>

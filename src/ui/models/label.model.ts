@@ -1,6 +1,6 @@
 import { Element } from "./element.model";
 
-export type Collection = {
+export type TCollection = {
   id: string;
   name: string;
   elements: Element[];

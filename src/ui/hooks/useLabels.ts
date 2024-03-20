@@ -1,12 +1,12 @@
 import { useState } from "react";
 
 import { Element } from "@ui/models/element.model";
-import { Collection } from "@ui/models/label.model";
+import { TCollection } from "@ui/models/label.model";
 import { uuid } from "@ui/utils/uuid.util";
 
 export const useLabels = () => {
   const [label, setLabel] = useState("");
-  const [labels, setLabels] = useState<Collection[]>([]);
+  const [labels, setLabels] = useState<TCollection[]>([]);
 
   const getExisted = (name: string) =>
     labels.find((label) => label.name === name);
@@ -19,12 +19,12 @@ export const useLabels = () => {
     if (existed) {
       addToLabel(existed.id, elements);
     } else {
-      const newLabel: Collection = {
+      const newLabel: TCollection = {
         id: uuid(),
         name,
         elements,
       };
-      const newLabels: Collection[] = [...labels, newLabel];
+      const newLabels: TCollection[] = [...labels, newLabel];
       setLabels(newLabels);
     }
 
