@@ -56,6 +56,6 @@ input {
   gap: 8px;
 }
 
-.footer .button {
+.footer * {
   flex: 1;
 }

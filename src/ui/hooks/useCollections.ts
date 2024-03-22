@@ -51,6 +51,7 @@ export const useCollections = () => {
     createCollection,
     deleteCollection,
     renameCollection,
+    setCollections,
     deleteItem,
   };
 };

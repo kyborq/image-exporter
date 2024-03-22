@@ -19,3 +19,17 @@ export const exportCollections = async (collections: TCollection[]) => {
   const result: Exported = await NetworkMessages.EXPORT.request(collections);
   return result;
 };
+
+export const previewCollections = async (collections: TCollection[]) => {
+  const newCollections = await NetworkMessages.PREVIEW.request(collections);
+
+  const result = newCollections.map((collection) => ({
+    ...collection,
+    elements: collection.elements.map((item) => ({
+      ...item,
+      image: bytesToImage(item.bytes),
+    })),
+  }));
+
+  return result;
+};
