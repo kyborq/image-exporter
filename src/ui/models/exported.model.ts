@@ -8,3 +8,9 @@ export type ExportedElement = {
   fileName: string;
   folderName: string;
 };
+
+export enum ExportFormat {
+  PNG,
+  JPG,
+  SVG,
+}

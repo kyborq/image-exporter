@@ -1,5 +1,5 @@
 import { NetworkMessages } from "@common/network/messages";
-import { Exported } from "@ui/models/exported.model";
+import { Exported, ExportFormat } from "@ui/models/exported.model";
 import { TCollection } from "@ui/models/label.model";
 
 import { bytesToImage } from "./image.service";
@@ -15,8 +15,14 @@ export const getSelected = async () => {
   return result;
 };
 
-export const exportCollections = async (collections: TCollection[]) => {
-  const result: Exported = await NetworkMessages.EXPORT.request(collections);
+export const exportCollections = async (
+  collections: TCollection[],
+  format: ExportFormat
+) => {
+  const result: Exported = await NetworkMessages.EXPORT.request({
+    collections,
+    format,
+  });
   return result;
 };
 

@@ -1,4 +1,5 @@
 import { initializeNetwork } from "@common/network/init";
+import { NetworkMessages } from "@common/network/messages";
 import { NetworkSide } from "@common/network/sides";
 
 async function bootstrap() {
@@ -11,6 +12,10 @@ async function bootstrap() {
       title: "ImageExporter",
     });
   }
+
+  figma.on("selectionchange", () => {
+    // TODO: Send update preview request to UI side
+  });
 }
 
 bootstrap();

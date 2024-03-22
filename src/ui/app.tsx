@@ -3,12 +3,13 @@ import { useState } from "react";
 import { NetworkMessages } from "@common/network/messages";
 
 import PlusIcon from "./assets/plus.svg?component";
-import { Collection } from "./components";
+import { Collection, Select } from "./components";
 import { Button } from "./components/Button/Button";
 import { Empty } from "./components/Empty/Empty";
 import { Input } from "./components/Input/Input";
 import { useCollections } from "./hooks/useCollections";
 import { useField } from "./hooks/useField";
+import { ExportFormat } from "./models/exported.model";
 import {
   exportCollections,
   getSelected,
@@ -17,6 +18,7 @@ import {
 import { downloadCollections } from "./services/file.service";
 
 function App() {
+  const [format, setFormat] = useState<ExportFormat>(ExportFormat.SVG);
   const { value, handleChange, clearValue } = useField();
   const {
     collections,
@@ -43,8 +45,8 @@ function App() {
     const fulled = collections.filter(
       (collection) => !!collection.elements.length
     );
-    const exported = await exportCollections(fulled);
-    await downloadCollections(exported);
+    const exported = await exportCollections(fulled, format);
+    await downloadCollections(exported, format);
 
     setIsLoading(false);
   };
@@ -95,6 +97,11 @@ function App() {
         <Button label="Центрировать" onClick={handleCenter} />
         <Button label="Скачать" onClick={handleExport} />
       </div>
+      <Select
+        items={[".png", ".jpg", ".svg"]}
+        value={format}
+        onClick={setFormat}
+      />
     </>
   );
 }

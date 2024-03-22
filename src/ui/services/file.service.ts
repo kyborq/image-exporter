@@ -1,10 +1,19 @@
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 
-import { Exported } from "@ui/models/exported.model";
+import { Exported, ExportFormat } from "@ui/models/exported.model";
 import { uuid } from "@ui/utils/uuid.util";
 
-export const downloadCollections = async (exported: Exported) => {
+const expectedFormat: Record<ExportFormat, string> = {
+  [ExportFormat.PNG]: "png",
+  [ExportFormat.JPG]: "jpg",
+  [ExportFormat.SVG]: "svg",
+};
+
+export const downloadCollections = async (
+  exported: Exported,
+  format: ExportFormat
+) => {
   const zip = new JSZip();
 
   const zipOptions: JSZip.JSZipGeneratorOptions = {
@@ -15,9 +24,13 @@ export const downloadCollections = async (exported: Exported) => {
     },
   };
 
+  const exportFormat = expectedFormat[format];
+
   exported.elements.forEach((element, index) => {
     zip.file(
-      `${element.folderName}/${index}_${element.fileName}_${uuid()}.png`,
+      `${element.folderName}/${index}_${
+        element.fileName
+      }_${uuid()}.${exportFormat}`,
       element.bytes
     );
   });

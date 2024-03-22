@@ -1,6 +1,6 @@
-import * as Networker from 'monorepo-networker';
+import * as Networker from "monorepo-networker";
 
-import { NetworkSide } from '@common/network/sides';
+import { NetworkSide } from "@common/network/sides";
 
 type Element = {
   id: string;
@@ -15,7 +15,16 @@ export type Collection = {
   elements: Element[];
 };
 
-type Payload = Collection[];
+enum ExportFormat {
+  PNG,
+  JPG,
+  SVG,
+}
+
+type Payload = {
+  collections: Collection[];
+  format: ExportFormat;
+};
 
 type Exported = {
   name: string;
@@ -38,19 +47,28 @@ export class ExportMessage extends Networker.MessageType<
     return NetworkSide.PLUGIN;
   }
 
-  async exportFrame(frameId: string) {
+  async exportFrame(frameId: string, format: ExportFormat) {
     const frame = figma.getNodeById(frameId) as FrameNode;
 
+    const expectedFormat: Record<ExportFormat, string> = {
+      [ExportFormat.PNG]: "PNG",
+      [ExportFormat.JPG]: "JPG",
+      [ExportFormat.SVG]: "SVG",
+    };
+
     const bytes = await frame.exportAsync({
-      format: "PNG",
+      format: expectedFormat[format] as ExportSettingsImage & ExportSettingsSVG,
     });
 
     return bytes;
   }
 
-  async exportElements(collection: Collection): Promise<ExportedElement[]> {
+  async exportElements(
+    collection: Collection,
+    format: ExportFormat
+  ): Promise<ExportedElement[]> {
     const exportTasks = collection.elements.map(async (element) => {
-      const bytes = await this.exportFrame(element.id);
+      const bytes = await this.exportFrame(element.id, format);
 
       return {
         folderName: collection.name,
@@ -65,8 +83,9 @@ export class ExportMessage extends Networker.MessageType<
   }
 
   async handle(payload: Payload, from: Networker.Side) {
-    const elements = payload.map(
-      async (collection) => await this.exportElements(collection)
+    const elements = payload.collections.map(
+      async (collection) =>
+        await this.exportElements(collection, payload.format)
     );
 
     const exported = await Promise.all(elements);
